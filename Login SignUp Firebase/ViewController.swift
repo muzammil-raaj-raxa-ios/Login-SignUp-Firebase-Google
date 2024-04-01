@@ -9,10 +9,14 @@ import UIKit
 import FirebaseCore
 import FirebaseAuth
 import GoogleSignIn
+import AuthenticationServices
 
 class ViewController: UIViewController {
   @IBOutlet weak var emailTF: UITextField!
   @IBOutlet weak var passwordTF: UITextField!
+  
+  @IBOutlet weak var appleBtn: ASAuthorizationAppleIDButton!
+  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -20,12 +24,22 @@ class ViewController: UIViewController {
     setBorder(textfield: emailTF)
     setBorder(textfield: passwordTF)
     
-    
+    signInWithApple()
   }
   func setBorder(textfield: UITextField) {
     textfield.layer.borderColor = UIColor.black.cgColor
     textfield.layer.borderWidth = 1.0
   }
+  
+  func signInWithApple() {
+    appleBtn.addTarget(self, action: #selector(handleSigninWithApple), for: .touchUpInside)
+  }
+  
+  @objc func handleSigninWithApple() {
+    performSignIn()
+  }
+  
+  
   
   @IBAction func loginBtn(_ sender: UIButton) {
     guard let email = emailTF.text else {return}
@@ -49,20 +63,8 @@ class ViewController: UIViewController {
     }
   }
   
-  func signInWithGoogle(idToken: String, accessToken: String) {
-    let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
-    Auth.auth().signIn(with: credential) { result, error in
-      guard let _ = result, error == nil else {return}
-      if let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC {
-        self.navigationController?.pushViewController(vc, animated: true)
-      }
-      
-    }
-  }
   
-
-  
-  
+  //MARK: - google sign in
   
   @IBAction func google(_ sender: Any) {
     
@@ -113,6 +115,96 @@ class ViewController: UIViewController {
     print("Google sign in button tapped")
   }
   
+  //MARK: - apple sign in
+  
+  @IBAction func appleSignIn(_ sender: Any) {
+    print("apple")
+  }
+  
   
 }
 
+extension ViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+  
+  private func performSignIn() {
+    let request = createAppleIDRequest()
+    let controller = ASAuthorizationController(authorizationRequests: [request])
+    controller.delegate = self
+    controller.presentationContextProvider = self
+    controller.performRequests()
+  }
+  
+  private func createAppleIDRequest() -> ASAuthorizationAppleIDRequest {
+    let appleIDProvider = ASAuthorizationAppleIDProvider()
+    let request = appleIDProvider.createRequest()
+    request.requestedScopes = [.fullName, .email]
+    request.nonce = randomNonceString()
+    request.state = randomNonceString()
+    return request
+  }
+  
+  private func randomNonceString(length: Int = 32) -> String {
+    precondition(length > 0)
+    let charset: [Character] = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+    var result = ""
+    var remainingLength = length
+    
+    while remainingLength > 0 {
+      let randoms: [UInt8] = (0 ..< 16).map { _ in
+        var random: UInt8 = 0
+        let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+        if errorCode != errSecSuccess {
+          fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
+        }
+        return random
+      }
+      
+      randoms.forEach { random in
+        if remainingLength == 0 {
+          return
+        }
+        
+        if random < charset.count {
+          result.append(charset[Int(random)])
+          remainingLength -= 1
+        }
+      }
+    }
+    
+    return result
+  }
+  
+  // MARK: - ASAuthorizationControllerDelegate
+  
+  func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+    if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+      let userIdentifier = appleIDCredential.user
+      let fullName = appleIDCredential.fullName
+      let email = appleIDCredential.email
+      // Use the user information for your app's login system
+      print("User ID: \(userIdentifier)")
+      print("Full Name: \(fullName?.givenName ?? "") \(fullName?.familyName ?? "")")
+      print("Email: \(email ?? "")")
+      
+      
+      DispatchQueue.main.async {
+        // Perform any operations with the downloaded image
+        if let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC {
+          self.navigationController?.pushViewController(vc, animated: true)
+        }
+      }
+      
+    }
+  }
+  
+  func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+    // Handle error
+    print("Sign in with Apple failed: \(error)")
+  }
+  
+  // MARK: - ASAuthorizationControllerPresentationContextProviding
+  
+  func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+    return self.view.window!
+  }
+}

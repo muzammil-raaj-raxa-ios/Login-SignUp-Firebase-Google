@@ -8,7 +8,6 @@ target 'Login SignUp Firebase' do
   pod 'FirebaseAuth'
   pod 'FirebaseCore'
   pod 'GoogleSignIn'
-  pod 'FireStore'
 
   # Pods for Login SignUp Firebase
 

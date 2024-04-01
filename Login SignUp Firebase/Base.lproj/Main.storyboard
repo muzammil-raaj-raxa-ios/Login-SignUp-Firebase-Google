@@ -99,9 +99,23 @@
                                 </constraints>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" image="google" title="Continue with Google"/>
+                                <buttonConfiguration key="configuration" style="filled" image="google" title="Continue with Google" imagePadding="10"/>
                                 <connections>
                                     <action selector="google:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SmU-wK-gKD"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ub0-aB-uaw">
+                                <rect key="frame" x="82" y="649.5" width="250" height="50"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="Jzg-an-Dcd"/>
+                                    <constraint firstAttribute="width" constant="250" id="ek3-ey-F7X"/>
+                                </constraints>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" image="applelogo" catalog="system" title="Continue with Apple" imagePadding="20"/>
+                                <connections>
+                                    <action selector="appleSignIn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YHB-7m-sDb"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -111,12 +125,14 @@
                             <constraint firstItem="LYt-AJ-HSJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="7SK-Hd-gYe"/>
                             <constraint firstItem="DtW-AV-Nf1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="8Xj-4I-9YB"/>
                             <constraint firstItem="LYt-AJ-HSJ" firstAttribute="top" secondItem="HJR-ur-q1Y" secondAttribute="bottom" constant="75" id="E2p-aS-PVd"/>
+                            <constraint firstItem="Ub0-aB-uaw" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Hzy-Aj-pu0"/>
                             <constraint firstItem="DtW-AV-Nf1" firstAttribute="top" secondItem="WVC-TW-7Xr" secondAttribute="bottom" constant="25" id="Kl1-Sc-YhY"/>
                             <constraint firstItem="HJR-ur-q1Y" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="100" id="UHI-eH-hVQ"/>
                             <constraint firstItem="WVC-TW-7Xr" firstAttribute="top" secondItem="h8X-OI-yGj" secondAttribute="bottom" constant="35" id="Ua0-4V-KxS"/>
                             <constraint firstItem="HJR-ur-q1Y" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="V4M-bp-lok"/>
                             <constraint firstItem="WVC-TW-7Xr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="WOv-5g-UZ4"/>
                             <constraint firstItem="h8X-OI-yGj" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Zo4-Me-HNP"/>
+                            <constraint firstItem="Ub0-aB-uaw" firstAttribute="top" secondItem="DtW-AV-Nf1" secondAttribute="bottom" constant="40" id="a6E-7H-zPg"/>
                             <constraint firstItem="h8X-OI-yGj" firstAttribute="top" secondItem="LYt-AJ-HSJ" secondAttribute="bottom" constant="50" id="kXU-gR-tTo"/>
                             <constraint firstItem="dKv-Hr-PFJ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="q81-NH-L3G"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="dKv-Hr-PFJ" secondAttribute="bottom" constant="50" id="wVn-iY-90g"/>
@@ -125,6 +141,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="aZw-PG-cyR"/>
                     <connections>
+                        <outlet property="appleBtn" destination="Ub0-aB-uaw" id="IzC-gW-3kO"/>
                         <outlet property="emailTF" destination="xKi-dK-nwf" id="vvo-fk-SQV"/>
                         <outlet property="passwordTF" destination="RA6-m3-kiZ" id="Ghg-TN-w0s"/>
                     </connections>
@@ -280,6 +297,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="applelogo" catalog="system" width="105" height="128"/>
         <image name="google" width="48" height="48"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
