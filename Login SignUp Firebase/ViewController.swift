@@ -115,12 +115,6 @@ class ViewController: UIViewController {
     print("Google sign in button tapped")
   }
   
-  //MARK: - apple sign in
-  
-  @IBAction func appleSignIn(_ sender: Any) {
-    print("apple")
-  }
-  
   
 }
 
